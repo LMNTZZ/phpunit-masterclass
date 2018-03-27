@@ -34,6 +34,14 @@ interface TaskEntityInterface
     public function isDone(): bool;
 
     /**
+     * Set when task entry is done
+     *
+     * @var bool
+     * @return bool
+     */
+    public function setDone($bool): bool;
+
+    /**
      * Get the creation date for this task entity
      *
      * @return \DateTime

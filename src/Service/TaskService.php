@@ -8,76 +8,103 @@
 
 namespace In2it\Masterclass\Service;
 
-
 use In2it\Masterclass\Model\TaskEntityInterface;
 use In2it\Masterclass\Model\TaskGatewayInterface;
 
-class TaskService implements TaskEntityInterface, TaskGatewayInterface
+class TaskService
 {
     /**
-     * @var
+     * @var TaskGatewayInterface
      */
     protected $taskGateway;
 
-    public function __construct()
+    /**
+     * TaskService constructor.
+     * @param TaskGatewayInterface $taskGateway
+     */
+    public function __construct(TaskGatewayInterface $taskGateway)
     {
-
+        $this->taskGateway = $taskGateway;
     }
 
-    public function getId(): string
+    /**
+     * Retrieve all tasks from the back-end
+     *
+     * @return \Iterator
+     */
+    public function getAllTasks(): \Iterator
     {
-        // TODO: Implement getId() method.
+        return $this->taskGateway->fetchAll();
     }
 
-    public function getLabel(): string
+    /**
+     * Adds a new task to the back-end
+     *
+     * @param TaskEntityInterface $taskEntity
+     * @return TaskEntityInterface
+     * @throws \InvalidArgumentException
+     */
+    public function addTask(TaskEntityInterface $taskEntity): TaskEntityInterface
     {
-        // TODO: Implement getLabel() method.
+        if (!$this->taskGateway->add($taskEntity)) {
+            throw new \InvalidArgumentException('Wrong task added');
+        }
+        return $taskEntity;
     }
 
-    public function getDescription(): string
+    /**
+     * Find a task by given task ID
+     *
+     * @param string $taskId
+     * @return TaskEntityInterface
+     * @throws \InvalidArgumentException
+     */
+    public function findTask(string $taskId): TaskEntityInterface
     {
-        // TODO: Implement getDescription() method.
+        $result = $this->taskGateway->find($taskId);
+        if (null === $result) {
+            throw new \InvalidArgumentException('Cannot find task with ID ' . $taskId);
+        }
+        return $result;
     }
 
-    public function isDone(): bool
+    /**
+     * Remove a task by given task entity
+     *
+     * @param TaskEntityInterface $taskEntity
+     * @return bool
+     */
+    public function removeTask(TaskEntityInterface $taskEntity): bool
     {
-        // TODO: Implement isDone() method.
+        $result = $this->taskGateway->remove($taskEntity);
+        return $result;
     }
 
-    public function getCreated(): \DateTime
+    /**
+     * Update a task by given task entity
+     *
+     * @param TaskEntityInterface $taskEntity
+     * @return bool
+     */
+    public function updateTask(TaskEntityInterface $taskEntity): bool
     {
-        // TODO: Implement getCreated() method.
+        $result = $this->taskGateway->update($taskEntity);
+        return $result;
     }
 
-    public function getModified(): \DateTime
+    /**
+     * Mark a task as done by given task entity
+     *
+     * @param TaskEntityInterface $taskEntity
+     * @return bool
+     * @throws \DomainException
+     */
+    public function markTaskDone(TaskEntityInterface $taskEntity): bool
     {
-        // TODO: Implement getModified() method.
+        if ($taskEntity->isDone()) {
+            throw new \DomainException('This task entity is already marked as "done".');
+        }
+        $taskEntity->setDone(true);
+        return $this->updateTask($taskEntity);
     }
-
-    public function fetchAll(): \Iterator
-    {
-        // TODO: Implement fetchAll() method.
-    }
-
-    public function add(TaskEntityInterface $taskEntity): bool
-    {
-        // TODO: Implement add() method.
-    }
-
-    public function find(string $taskId): ?TaskEntityInterface
-    {
-        // TODO: Implement find() method.
-    }
-
-    public function remove(TaskEntityInterface $taskEntity): bool
-    {
-        // TODO: Implement remove() method.
-    }
-
-    public function update(TaskEntityInterface $taskEntity): bool
-    {
-        // TODO: Implement update() method.
-    }
-
-
 }
