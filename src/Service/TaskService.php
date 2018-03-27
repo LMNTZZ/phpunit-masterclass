@@ -14,21 +14,14 @@ use In2it\Masterclass\Model\TaskGatewayInterface;
 
 class TaskService implements TaskEntityInterface, TaskGatewayInterface
 {
-    private $id;
-    private $label;
-    private $description;
-    private $isDone;
-    private $created;
-    private $modified;
+    /**
+     * @var
+     */
+    protected $taskGateway;
 
-    public function __construct($id, $label, $description, $isDone, $created, $modified)
+    public function __construct()
     {
-        $this->id = $id;
-        $this->label = $label;
-        $this->description = $description;
-        $this->isDone = $isDone;
-        $this->created = $created;
-        $this->modified = $modified;
+
     }
 
     public function getId(): string
